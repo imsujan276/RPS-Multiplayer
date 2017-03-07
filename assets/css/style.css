@@ -1,4 +1,6 @@
-#already-taken-msg {
+#already-taken-msg,
+#chat-box,
+#game-box {
 	display: none;
 }
 .waiting-player {

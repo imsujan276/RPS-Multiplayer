@@ -12,7 +12,7 @@ var RPS = (function (rps) {
     view.showAlreadyTakenMsg = () => $("#already-taken-msg").show();
     view.hideAlreadyTakenMsg = () => $("#already-taken-msg").hide();
     view.addWaitingPlayerList = name => waitingList.append(
-      $("<button>").addClass("btn btn-success waiting-player").text(name)
+      $("<button>").addClass("btn btn-default disabled waiting-player").text(name)
     );
 
 

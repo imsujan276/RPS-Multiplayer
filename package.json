@@ -19,6 +19,7 @@
   "homepage": "https://github.com/monad98/RPS-Multiplayer#readme",
   "dependencies": {
     "bootstrap": "^3.3.7",
+    "firebase": "^3.7.0",
     "jquery": "^3.1.1"
   },
   "devDependencies": {

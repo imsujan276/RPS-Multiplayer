@@ -12,6 +12,7 @@ var RPS = (function (rps) {
   });
   const database = firebase.database();
   const usersRef = database.ref("users/");
+
   const startGame = (name) => {
     database.ref("users/" + name).once('value').then((userSnapshot) => {
       //show already taken name message
@@ -30,14 +31,15 @@ var RPS = (function (rps) {
         })
         .then(err => {
           if(err) console.log("User could not be saved. " + err);
+
+
+
+          //view update: add user to waiting list
           view.addWaitingPlayerList(name);
 
 
         });
     });
-
-
-
   };
 
   const view = rps.view;
