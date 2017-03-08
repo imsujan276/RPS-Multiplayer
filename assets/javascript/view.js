@@ -30,17 +30,36 @@ var APP = (function (app) {
 
 
     //waiting list rendering
-    view.addWaitingPlayerList = (name, me) => {
+    view.appendToWaitingList = (name, me) => {
       const classToAdd = me ?
         'btn btn-default disabled waiting-player' : 'btn btn-success waiting-player';
       view.waitingList.append($('<button>').addClass(classToAdd).text(name));
     };
+    view.removeFromWaitingList = (name) => {
+      view.waitingList.children("button").each(function (idx) {
+        if($(this).text() === name) $(this).remove();
+      });
+    };
+
 
     //my stats rendering
-    view.renderMyStat = () => {
+    view.renderMyStat = (me) => {
+      $("#win").text(me.win);
+      $("#lose").text(me.lose);
+      $("#game-played").text(me.gamePlayed);
+    };
+
+    view.hideChallengeMsg = () => {
+      $('#challenge-msg-box').hide();
+    };
+
+    view.addToGameListView = () => {
 
     };
 
+    view.destroyGameView = () => {
+
+    }
 
   });
 
