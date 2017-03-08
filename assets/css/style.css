@@ -1,8 +1,23 @@
-#already-taken-msg,
 #chat-box,
 #game-box {
 	display: none;
 }
 .waiting-player {
 	margin: 5px;
+}
+#message-box {
+	position: fixed;
+	right: 20px;
+	top: 20px;
+	font-weight: bold;
+}
+#challenge-msg-box {
+	display: none;
+	position: fixed;
+	transform: translate(-50%, -50%);
+	left: 50%;
+	top: 50%;
+}
+#challenge-msg-box .panel {
+	background-color: lightgrey;
 }

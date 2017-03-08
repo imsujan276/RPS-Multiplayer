@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <title>Rock Paper Scissors</title>
@@ -14,68 +15,84 @@
   <script src="node_modules/firebase/firebase-database.js"></script>
   <!--<script src="https://code.jquery.com/jquery-3.1.1.min.js" integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>-->
   <script src="node_modules/jquery/dist/jquery.js"></script>
+  <script src="assets/javascript/rps.js"></script>
   <script src="assets/javascript/view.js"></script>
   <script src="assets/javascript/game.js"></script>
+  <script src="assets/javascript/event-listen.js"></script>
 </head>
+
 <body>
-<div class="page-header">
-  <h1 class="text-center text-primary">Rock Paper Scissors</h1>
-</div>
-<div class="container">
-  <div class="row">
-    <div>
-      <form id="name-form" class="form-inline text-center">
-        <div class="form-group">
-          <label class="sr-only" for="name">Name</label>
-          <input type="text" class="form-control" id="name" placeholder="Name" autofocus>
+  <div class="page-header">
+    <h1 class="text-center text-primary">Rock Paper Scissors</h1>
+  </div>
+  <div class="container">
+    <div class="row">
+      <div>
+        <form id="name-form" class="form-inline text-center">
+          <div class="form-group">
+            <label class="sr-only" for="name">Name</label>
+            <input type="text" class="form-control" id="name" placeholder="Name" autofocus>
+          </div>
+          <button id="start-game" type="submit" class="btn btn-primary">Start</button>
+        </form>
+      </div>
+    </div>
+    <br>
+    <div id="game-box" class="row">
+      <div class="col-sm-4">
+        <div>
+          <p>waiting opponent</p>
         </div>
-        <button id="start-game" type="submit" class="btn btn-primary">Start</button>
-      </form>
-      <div id="already-taken-msg" class="text-danger text-center">
-        <p>This name is already taken.<br> Please choose another name.</p>
+      </div>
+      <div class="col-sm-4"></div>
+      <div class="col-sm-4">
+        <p>Opponent</p>
+      </div>
+    </div>
+    <br><br><br>
+    <div id="chat-box" class="row">
+      <div class="col-sm-offset-2 col-sm-8">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Chat</h3>
+          </div>
+          <div id="chat-messages" class="panel-body">
+            <p>chat message</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br><br>
+    <div class="row">
+      <div class="col-sm-6">
+        <p>Current Games</p>
+        <ul id="current-games" class="list-group">
+          <li class="list-group-item">game1</li>
+          <li class="list-group-item">game2</li>
+          <li class="list-group-item">game3</li>
+          <li class="list-group-item">game4</li>
+        </ul>
+      </div>
+      <div class="col-sm-6">
+        <p>Waiting players</p>
+        <div id="waiting-players" class="col-sm-2"></div>
       </div>
     </div>
   </div>
-  <br>
-  <div id="game-box" class="row">
-    <div class="col-sm-4">
-      <div><p>waiting opponent</p></div>
-    </div>
-    <div class="col-sm-4"></div>
-    <div class="col-sm-4">
-      <p>Opponent</p>
-    </div>
-  </div>
-  <br><br><br>
-  <div id="chat-box" class="row">
-    <div class="col-sm-offset-2 col-sm-8">
-      <div class="panel panel-primary">
-        <div class="panel-heading">
-          <h3 class="panel-title">Chat</h3>
-        </div>
-        <div id="chat-messages" class="panel-body">
-          <p>chat message</p>
+    <div id="message-box"></div>
+    <div id="challenge-msg-box">
+      <div class="panel">
+        <div class="panel-body text-center">
+          <h4>You are Challenged! <br>Are you going to play RPS with <span id="challenger"></span>? </h4><br>
+          <div>
+            <button class="btn btn-primary">Yes</button>
+          <button class="btn btn-danger">No</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <br><br>
-  <div class="row">
-    <div class="col-sm-6">
-      <p>Current Games</p>
-      <ul id="current-games" class="list-group">
-        <li class="list-group-item">game1</li>
-        <li class="list-group-item">game2</li>
-        <li class="list-group-item">game3</li>
-        <li class="list-group-item">game4</li>
-      </ul>
-    </div>
-    <div class="col-sm-6">
-      <p>Waiting players</p>
-      <div id="waiting-players" class="col-sm-2"></div>
-    </div>
-  </div>
-</div>
+    
 
 </body>
+
 </html>
