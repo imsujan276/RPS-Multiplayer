@@ -18,10 +18,13 @@ var APP = (function (app) {
 
     //Event listen for clicking waiting user
     view.waitingList.on("click", (e) => {
-      console.log(e.target.textContent);
       game.challenge(e.target.textContent);
     });
 
+    //Event Listen for accept challenge (click YES)
+    view.acceptBtn.on("click", (e) => {
+      game.acceptChallenge();
+    });
 
   });
 

@@ -34,17 +34,18 @@ var APP = (function (app) {
         //When user disconnected, delete user from waitingList
         database.ref("/wait-list/" + name).onDisconnect().remove();
 
-        //watch user challenged by someone.
+        //receive challenge: watch if user challenged by someone.
         database.ref("/users/" + name).on("value", userSnap => {
+          //show user "challenged by someone" message
           if(userSnap.val().challengedBy) view.showChallengedMsg(userSnap.val().challengedBy);
+
         });
-        //TODO: CANCEL ON
       });
   };
 
   const setChild = (ref, key, value) => {
     return ref.child(key).set(value);
-  }
+  };
 
   const initialMe = {
     win: 0,
@@ -53,7 +54,7 @@ var APP = (function (app) {
     challengedBy: null
   };
 
-  const initializeMe = (name, stats = initialMe) => {
+  const updateMe = (name, stats = initialMe) => {
     me = stats;
     me.name = name;
   };
@@ -66,7 +67,7 @@ var APP = (function (app) {
         if (userSnapshot.exists()) {
           view.showMessage("Welcome back " + name + ". Enjoy!", "alert-success");
           //save my info
-          initializeMe(name, userSnapshot.val());
+          updateMe(name, userSnapshot.val());
           //add user to waiting list
           addToWaitingList(name);
         } 
@@ -81,7 +82,7 @@ var APP = (function (app) {
             .then(err => {
               if (err) console.log("User could not be saved. " + err);
               // save my info: name, lose, win, gameplayed
-              initializeMe(name);
+              updateMe(name);
 
               //add user to waiting list
               addToWaitingList(name);
@@ -96,9 +97,13 @@ var APP = (function (app) {
     //error handling
     if (!me.name) return view.showMessage("please set your name first.", "alert-danger");
 
+    //send challenge message to opponet
     database.ref("/users/" + opponentName).update({challengedBy: me.name});
 
+  };
 
+  game.acceptChallenge = () => {
+    //TODO: CANCEL ON when accept
   };
 
 
