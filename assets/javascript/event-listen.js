@@ -12,7 +12,7 @@ var APP = (function (app) {
       const name = $('#name-input').val().trim();
       $('#name-input').val('');
       if (!name) return; //input validation
-      game.startGame(name);
+      game.setUsername(name);
       return false;
     });
 
