@@ -2,28 +2,34 @@
  * Created by Hyungwu Pae on 3/6/17.
  */
 var APP = (function (app) {
-  
+
   const game = app.game;
-  const view = app.view;
 
   $(() => {
     //Event listen for start button click or enter key being pressed
-    view.nameForm.on("submit", (e) => {
+    $('#name-form').on('submit', (e) => {
       e.preventDefault();
-      const name = view.nameInput.val().trim();
-      if (!name) return; //input validation check
+      const name = $('#name-input').val().trim();
+      $('#name-input').val('');
+      if (!name) return; //input validation
       game.startGame(name);
       return false;
     });
 
     //Event listen for clicking waiting user
-    view.waitingList.on("click", (e) => {
+    $('#waiting-players').on('click', 'button', (e) => {
       game.challenge(e.target.textContent);
     });
 
-    //Event Listen for accept challenge (click YES)
-    view.acceptBtn.on("click", (e) => {
-      game.acceptChallenge();
+    //Event Listen for accepting challenge (click YES)
+    $('#accept-challenge-btn').on('click', game.acceptChallenge);
+
+    //Event Listen for denying challenge (click YES)
+    $('#deny-challenge-btn').on('click', game.denyChallenge);
+
+    //Event Listen for choosing one of the RPS
+    $('button.rps').on('click', (e) => {
+      game.chooseOneOfRPS(e.target.textContent);
     });
 
   });

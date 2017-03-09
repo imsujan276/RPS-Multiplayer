@@ -3,19 +3,23 @@
  */
 var APP = (function (app) {
 
-  const rps = app.rps = (me, you) => {
-    if (me === you) return "draw";
+
+
+  app.rps = (player1, player2) => {
+    const choice1 = player1.choice;
+    const choice2 = player2.choice;
+    if (choice1 === choice2) return choice1;
 
     else {
-      if ((me === "rock" && you === "scissor") ||
-        (me === "paper" && you === "rock") ||
-        (me === "scissor" && you === "paper")) {
-          return "win";
+      if ((choice1 === 'ROCK' && choice2 === 'SCISSOR') ||
+        (choice1 === 'PAPER' && choice2 === 'ROCK') ||
+        (choice1 === 'SCISSOR' && choice2 === 'PAPER')) {
+        return {winner: player1, loser: player2};
       }
-      return "lose";
+      return {winner: player2, loser: player1};
     }
   };
-
+  
   return app;
 
 })(APP || {});

@@ -30,26 +30,56 @@
       <div>
         <form id="name-form" class="form-inline text-center">
           <div class="form-group">
-            <label class="sr-only" for="name">Name</label>
-            <input type="text" class="form-control" id="name" placeholder="Name" autofocus>
+            <label class="sr-only" for="name-input">Name</label>
+            <input type="text" class="form-control" id="name-input" placeholder="Name" autofocus>
           </div>
           <button id="start-game" type="submit" class="btn btn-primary">Start</button>
         </form>
       </div>
     </div>
     <br>
-    <div id="game-box" class="row">
-      <div class="col-sm-4">
-        <div>
-          <p>waiting opponent</p>
+    <div class="row">
+      <div class="col-sm-12">
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Game Stats ---------top ranker</h3>
+          </div>
+          <div class="panel-body">
+            PLAYER: <span id="name" class="label label-info">?</span>
+            WIN: <span id="win" class="label label-primary">0</span>
+            LOSE: <span id="lose" class="label label-danger">0</span>
+            GAME PLAYED: <span id="game-played" class="label label-success">0</span>
+          </div>
         </div>
       </div>
-      <div class="col-sm-4"></div>
-      <div class="col-sm-4">
-        <p>Opponent</p>
+    </div>
+    <div class="row">
+      <div class="col-sm-12">
+        <div id="game-box" class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">My Game</h3>
+          </div>
+          <div class="panel-body">
+            <div class="col-sm-4">
+              <div id="my-rps-choices">
+                <button class="rps btn btn-block btn-info">ROCK</button>
+                <button class="rps btn btn-block btn-info">PAPER</button>
+                <button class="rps btn btn-block btn-info">SCISSOR</button>
+              </div>
+              <div id="my-choice" class="thumbnail"></div>
+            </div>
+            <div class="col-sm-4">
+              <h2 id="result-message"></h2>
+            </div>
+            <div class="col-sm-4">
+              <div class="thumbnail">
+                <img id="opponent-choice" src="assets/images/qmark.png">
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <br><br><br>
     <div id="chat-box" class="row">
       <div class="col-sm-offset-2 col-sm-8">
         <div class="panel panel-primary">
@@ -62,27 +92,26 @@
         </div>
       </div>
     </div>
-    <br><br>
     <div class="row">
       <div class="col-sm-6">
-        <p>Current Games</p>
-        <ul id="current-games" class="list-group">
-          <li class="list-group-item">game1</li>
-          <li class="list-group-item">game2</li>
-          <li class="list-group-item">game3</li>
-          <li class="list-group-item">game4</li>
-        </ul>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Current Games</h3>
+          </div>
+          <div class="panel-body">
+            <ul id="current-games" class="list-group"></ul>
+          </div>
+        </div>
       </div>
       <div class="col-sm-6">
-        <p>Waiting players</p>
-        <div id="waiting-players" class="col-sm-2"></div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <div>WIN <span id="win" class="label label-primary">0</span></div>
-        <div>LOSE <span id="lose" class="label label-danger">0</span></div>
-        <div>GAME PLAYED <span id="game-played" class="label label-success">0</span></div>
+        <div class="panel panel-primary">
+          <div class="panel-heading">
+            <h3 class="panel-title">Waiting players</h3>
+          </div>
+          <div class="panel-body">
+            <div id="waiting-players" class="col-sm-2"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -98,6 +127,15 @@
         </div>
       </div>
     </div>
+  <div id="waiting-msg-box">
+    <div class="panel">
+      <div class="panel-body text-center">
+        <h4>Waiting <span id="opponent"></span>'s response...</h4><br>
+        <div>
+        </div>
+      </div>
+    </div>
+  </div>
     
 
 </body>

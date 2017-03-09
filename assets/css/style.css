@@ -11,19 +11,24 @@
 	top: 20px;
 	font-weight: bold;
 }
-#challenge-msg-box {
+#challenge-msg-box,
+#waiting-msg-box {
 	display: none;
 	position: fixed;
 	transform: translate(-50%, -50%);
 	left: 50%;
 	top: 50%;
 }
-#challenge-msg-box .panel {
+#challenge-msg-box .panel,
+#waiting-msg-box .panel {
 	background-color: lightgrey;
 }
-#accept-challenge-btn {
-	
+#name,
+#win,
+#lose,
+#game-played {
+	margin-right: 10px;
 }
-#deny-challenge-btn {
-
+.my-choice {
+	display: none;
 }
