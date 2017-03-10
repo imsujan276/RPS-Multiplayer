@@ -43,7 +43,7 @@ var APP = (function (app) {
       }, 2000);
     });
 
-    // ranker.initialize();
+    ranker.initialize();
 
 
 
@@ -95,8 +95,7 @@ var APP = (function (app) {
             lose: 0,
             gamePlayed: 0
           })
-            .then(err => {
-              if (err) console.log('User could not be saved. ' + err);
+            .then(() => {
               // save my info: name, lose, win, gameplayed
               setMe({
                 name: name,
@@ -120,8 +119,7 @@ var APP = (function (app) {
   // FOR BOTH CHALLENGEE AND CHALLENGER
   const addToWaitingList = myName => {
     waitingListRef.child(myName).set(myName)
-      .then(err => {
-        if (err) console.log(err);
+      .then(() => {
         console.log('USER HAS BEEN ADDED TO WAITING LIST');
         //change offline to false;
         database.ref('users/' + myName).update({offline: false});
@@ -161,8 +159,7 @@ var APP = (function (app) {
 
           if(me.challengedBy && !challenger.challengedTo) {
             database.ref('users/' + me.name).update({challengedBy: null})
-              .then(err => {
-                if(err) console.log(err);
+              .then(() => {
 
                 console.log('CHALLENGE IS CANCELED.');
 
@@ -185,7 +182,7 @@ var APP = (function (app) {
 
         //view update
         view.hideChallengedByMsg();
-        view.hideWaitingMsg();
+        view.hideWaitingChallengeesMsg();
 
         //Because user entered game, remove user from waiting list
         waitingListRef.child(myName).remove(); // don't need to clean onDisconnect queue, because user removed from wait list
@@ -229,18 +226,33 @@ var APP = (function (app) {
         //view update: hide rps game ui
         view.hideRpsGameUI();
         view.removeFromGameListView(gameName);
-      } else {
+      }
+      else {
         let players = [];
         Object.keys(game).forEach(name => {
           if(game[name].choice) players = [ ...players, {name, choice: game[name].choice}];
         });
-        if(players.length === 2) {
+        if(players.length === 0) {
+          console.log("HERE");
+         view.updateGameMsg("Choose one of choices!");
+        }
+        //only I(user) chose and waiting opponent's choice
+        if(players.length === 1 && players[0].name && players[0].name === me.name) {
+          console.log(me.name);
+          console.log(players[0].name);
+          //view update
+          view.updateGameMsg("Waiting Opponent's choice");
+        }
+        //Both players picked their choice
+        else if(players.length === 2) {
           const result = rpsLogic(players[0], players[1]);
 
           //view update
+          view.updateGameMsg("");
           if(typeof result === 'object') {
             if(result.winner.name === me.name) {
-              database.ref('users/' + me.name).update({win: me.win + 1, gamePlayed: me.gamePlayed + 1});
+              //number of win is negative number, so we can grab most wins player with firebase default ascending order
+              database.ref('users/' + me.name).update({win: me.win - 1, gamePlayed: me.gamePlayed + 1});
               view.showResultMessage('win', me.name);
               view.showOpponentChoice(result.loser.choice);
             } else {
@@ -252,9 +264,33 @@ var APP = (function (app) {
             //draw
             view.showResultMessage('draw');
             view.showOpponentChoice(result);
-            database.ref('users/' + me.name).update({lose: me.lose + 1, gamePlayed: me.gamePlayed + 1});
+            database.ref('users/' + me.name).update({gamePlayed: me.gamePlayed + 1});
           }
 
+          //After 3 secs, rps again!
+          let i = 3;
+          const interval = setInterval(() => {
+            if(i > 0) {
+              view.showTimeFrom(i--);
+            } else {
+              clearInterval(interval);
+              view.showTimeFrom("");
+
+              // new rps start
+              database.ref('games/' + me.currentGame).transaction(currentVal => {
+                Object.keys(currentVal).forEach(name => {
+                  currentVal[name].choice = null;
+                });
+                return currentVal;
+              });
+
+              //view update
+              view.hideResultMessage();
+              view.hideUserChoice();
+              view.hideOpponentChoice();
+
+            }
+          }, 1000);
         }
 
       }
@@ -279,19 +315,18 @@ var APP = (function (app) {
     //else
     database.ref('users/' + challengeeName).update({challengedBy: me.name});
     database.ref('users/' + me.name).update({challengedTo: me.name});
-    view.showWaitingMsg(challengeeName);
+    view.showWaitingChallengeesMsg(challengeeName);
     console.log('USER HAS CHALLENGED TO ' + challengeeName);
 
     //If a challengee went offline, cancel challenge
     database.ref('users/' + challengeeName).on('value', snap => {
       if(snap.val() && snap.val().offline) {
         database.ref('users/' + me.name).update({challengedTo: null})
-          .then(err => {
-            if(err) console.log(err);
+          .then(() => {
             console.log('CHALLENGE IS CANCELED.');
 
             //view update: hide waiting message, user is still in the waiting list
-            view.hideWaitingMsg();
+            view.hideWaitingChallengeesMsg();
 
             //we don't have to listen to change of challengee any more. Just listen to game object change
             database.ref('users/' + challengeeName).off(); //detach listener
@@ -316,8 +351,7 @@ var APP = (function (app) {
     value[challenger] = { choice: null, role: 'challenger' };
 
     gamesRef.child(gameName).set(value)
-      .then(err => {
-        if(err) console.log(err);
+      .then(() => {
 
         //update users with gameName.
         database.ref('users/' + me.name).update({currentGame: gameName, challengedBy: null});
@@ -325,6 +359,7 @@ var APP = (function (app) {
       });
   };
 
+  //TODO: DENY NOT WORK VIEW
   game.denyChallenge = () => {
 
     //reset user's challenge related property

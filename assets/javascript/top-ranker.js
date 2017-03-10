@@ -8,9 +8,8 @@ var APP = (function (app) {
   const database = app.database;
 
   ranker.initialize = () => {
-
-    let rankers = []; //has to be reversed for descending order
     database.ref('users').orderByChild('win').limitToFirst(10).on('value', usersSnap => {
+      let rankers = []; //has to be reversed for descending order
       usersSnap.forEach(userSnap => {
         rankers = [...rankers, { name: userSnap.key, win: userSnap.val().win }];
       });

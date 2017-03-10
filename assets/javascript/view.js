@@ -27,7 +27,7 @@ var APP = (function (app) {
     //my stats rendering
     view.renderMyStat = (me) => {
       $('#name').text(me.name);
-      $('#win').text(me.win);
+      $('#win').text(-me.win);
       $('#lose').text(me.lose);
       $('#game-played').text(me.gamePlayed);
     };
@@ -35,10 +35,10 @@ var APP = (function (app) {
 
     //add player to waiting list
     view.appendToWaitingList = (name, isThatYou) => {
-      const classToAdd = isThatYou ?
-        'btn btn-default disabled waiting-player' : 'btn btn-success waiting-player';
       // const classToAdd = isThatYou ?
-      //   'list-group-item disabled waiting-player' : 'list-group-item list-group-item-success waiting-player';
+      //   'btn btn-default disabled waiting-player' : 'btn btn-success waiting-player';
+      const classToAdd = isThatYou ?
+        'list-group-item disabled waiting-player' : 'list-group-item list-group-item-success waiting-player';
       waitingList.append($('<button>').addClass(classToAdd).text(name));
     };
     //delete player from waiting list
@@ -56,11 +56,11 @@ var APP = (function (app) {
     view.hideChallengedByMsg = () => $('#challenge-msg-box').hide();
 
 
-    view.showWaitingMsg = name => {
+    view.showWaitingChallengeesMsg = name => {
       $('#opponent').text(name);
       $('#waiting-msg-box').show();
     };
-    view.hideWaitingMsg = () => $('#waiting-msg-box').hide();
+    view.hideWaitingChallengeesMsg = () => $('#waiting-msg-box').hide();
 
 
     view.showNameForm = () => nameForm.show();
@@ -88,32 +88,41 @@ var APP = (function (app) {
       $('#my-rps-choices').children().hide();
       $('#my-choice').append($('<img>').attr('src', 'assets/images/' + choice + '.png')).show('slow');
     };
-    view.showOpponentChoice = choice => {
-      $('#opponent-choice').attr('src', 'assets/images/' + choice + '.png')
+    view.hideUserChoice = () => {
+      $('#my-rps-choices').children().show();
+      $('#my-choice').hide().children().remove();
     };
+
+    view.showOpponentChoice = choice => $('#opponent-choice').attr('src', 'assets/images/' + choice + '.png');
+    view.hideOpponentChoice = choice => $('#opponent-choice').attr('src', 'assets/images/qmark.png');
+
+    view.showWaitingChoiceMsg = opponent => $('#waiting-opponent-choice').show();
+    view.hideWaitingChoiceMsg = () => $('#waiting-opponent-choice').hide();
+    view.updateGameMsg = msg => $('#waiting-opponent-choice').text(msg);
 
     view.showResultMessage = result => {
       if(result === 'draw') $('#result-message').text("Draw!");
       else $('#result-message').text("You " + result + "!");
     };
+    view.hideResultMessage = () => $('#result-message').text("");
 
-
-    view.updateRanking = reversedRankers => {
-      topRankers.empty();
-      const num =  reversedRankers.length;
-      reversedRankers.forEach((ranker, idx) => {
-        const rank = num - idx;
-        topRankers.prepend(
-          $('<li>').addClass('list-group-item').text(rank + ". " + ranker.name + ": " + ranker.win)
+    view.updateRanking = rankers => {
+      $('#top-rankers li').remove();
+      const num =  rankers.length;
+      rankers.forEach((ranker, idx) => {
+        const rank = idx + 1;
+        topRankers.append(
+          $('<li>').addClass('list-group-item').text(rank + ". " + ranker.name + ": " + (-ranker.win))
         )
       });
 
     };
 
+    view.showTimeFrom = x => {
+      $('#timer').text(x);
+    };
 
   });
-
-
 
 
 

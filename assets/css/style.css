@@ -29,6 +29,12 @@
 #game-played {
 	margin-right: 10px;
 }
-.my-choice {
+#my-choice {
 	display: none;
+}
+.vcenter {
+	display: inline-block;
+	vertical-align: middle;
+	float: none;
+	
 }
