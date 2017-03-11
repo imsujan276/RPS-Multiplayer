@@ -32,9 +32,14 @@
 #my-choice {
 	display: none;
 }
-.vcenter {
-	display: inline-block;
-	vertical-align: middle;
-	float: none;
-	
+#name {
+	font-size: larger;
+	font-weight: bold;
 }
+
+/*.vcenter {*/
+	/*display: inline-block;*/
+	/*vertical-align: middle;*/
+	/*float: none;*/
+	/**/
+/*}*/

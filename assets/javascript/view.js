@@ -81,7 +81,10 @@ var APP = (function (app) {
       });
     };
 
-    view.showRpsGameUI = () => gameBox.show('slow');
+    view.showRpsGameUI = () => {
+      view.updateGameMsg("Choose one of choices!");
+      gameBox.show('slow');
+    };
     view.hideRpsGameUI = () => gameBox.hide('slow');
 
     view.showUserChoice = choice => {
