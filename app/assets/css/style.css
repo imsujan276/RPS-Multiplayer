@@ -4,12 +4,7 @@
 .waiting-player {
 	margin: 5px;
 }
-/*#message-box {*/
-	/*position: fixed;*/
-	/*right: 20px;*/
-	/*top: 20px;*/
-	/*font-weight: bold;*/
-/*}*/
+
 #challenge-msg-box,
 #waiting-msg-box {
 	display: none;
@@ -36,12 +31,6 @@
 	font-weight: bold;
 }
 
-/*.vcenter {*/
-	/*display: inline-block;*/
-	/*vertical-align: middle;*/
-	/*float: none;*/
-	/**/
-/*}*/
 .italic {
 	font-style: italic;
 }

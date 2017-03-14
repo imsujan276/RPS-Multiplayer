@@ -126,6 +126,7 @@ var APP = (function (app) {
       $('#timer').text(x);
     };
 
+    //if message is from user, set text color as primary, otherwise warning color.
     view.appendChatMsg = (msg, myName) => {
       const color = myName === msg.name ? 'text-primary' : 'text-warning';
       const chatMsgs = $('#chat-messages');

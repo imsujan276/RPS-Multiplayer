@@ -3,9 +3,11 @@
  */
 var APP = (function (app) {
   const database = app.database;
-  const chat = app.chat = {};
   const view = app.view;
+
   const chatRoomsRef = database.ref('chat-rooms');
+
+  const chat = app.chat ? app.chat : app.chat = {};
 
   chat.watchChatMessage = (gameId, myName) => {
 
@@ -13,9 +15,6 @@ var APP = (function (app) {
       view.appendChatMsg(snap.val(), myName);
     });
   };
-
-
-
 
   return app;
 

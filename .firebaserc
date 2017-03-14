@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "rps": "rps-monad",
+    "default": "rps-monad"
+  }
+}

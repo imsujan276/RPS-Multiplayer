@@ -2,10 +2,10 @@
  * Created by Hyungwu Pae on 3/9/17.
  */
 var APP = (function (app) {
-  const ranker = app.ranker = {};
+  const database = app.database;
   const view = app.view;
 
-  const database = app.database;
+  const ranker = app.ranker ? app.ranker : app.ranker = {};
 
   ranker.initialize = () => {
     database.ref('users').orderByChild('win').limitToFirst(10).on('value', usersSnap => {
