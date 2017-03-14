@@ -32,6 +32,20 @@ var APP = (function (app) {
       game.chooseOneOfRPS(e.target.textContent);
     });
 
+    //user quit the game
+    $('button#quit').on('click', game.quitGame);
+
+    //user typed chat message
+    $('#chat-form').on('submit', e => {
+      e.preventDefault();
+      const msg = $('#chat-message').val();
+      $('#chat-message').val('');
+      if (!msg) return; //input validation
+      game.submitMsg(msg);
+      return false;
+    });
+
+
   });
 
 

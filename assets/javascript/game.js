@@ -6,12 +6,14 @@ var APP = (function (app) {
   const view = app.view; //view object of RPS game
   const rpsLogic = app.rps;
   const ranker = app.ranker;
+  const chat = app.chat;
   const game = app.game = {};
   const database = app.database;
 
   const usersRef = database.ref('users/');
   const gamesRef = database.ref('games/');
   const waitingListRef = database.ref('wait-list/');
+  const chatRoomsRef = database.ref('chat-rooms');
   let me = { //local status of user
     win: 0,
     lose: 0,
@@ -28,14 +30,14 @@ var APP = (function (app) {
     });
 
     waitingListRef.on('child_removed', oldWaitingUserSnap => {
-      view.removeFromWaitingList(oldWaitingUserSnap.val());
+      const name = oldWaitingUserSnap.val();
+      view.removeFromWaitingList(name);
     });
 
     gamesRef.on('child_added', addedGameSnap => {
       const game = addedGameSnap.val();
       game.name = addedGameSnap.key;
       //Add new game to game list except user's own game.
-        //I used setTimeout function because the delay to show other games are not critical to user
         if(me.currentGame && me.currentGame.id === game.name) view.addToGameListView(game.name, true);
         else view.addToGameListView(game.name, false);
     });
@@ -56,17 +58,27 @@ var APP = (function (app) {
   game.setUsername = (name) => {
     //if user has name, this is mistake. This situation is rare, because we hided name form.
     if(me.name) return view.showMessage('You already have name!', 'alert-danger');
+
     //else
     usersRef.child(name).onDisconnect().update({currentGame: null});
     usersRef.child(name).once('value')
-      .then((userSnapshot) => {
+      .then((userSnapshot) => { // TODO: PROMISE ALL????
         //This user have played before 
         if (userSnapshot.exists()) {
-          view.showMessage('Welcome back ' + name + '. Enjoy!', 'alert-success');
-          //save my info
-          me = userSnapshot.val();
-          //add user to waiting list
-          addToWaitingList(name);
+          waitingListRef.child(name).once('value')
+            .then(waitingSnap => {
+              if(waitingSnap.exists()) {
+                view.showMessage('You are already online, check another tab of your browser.', 'alert-danger');
+              } else {
+                view.showMessage('Welcome back ' + name + '. Enjoy!', 'alert-success');
+                //save my info
+                me = userSnapshot.val();
+                //start watching user
+                watchMe(name);
+                //add user to waiting list
+                addToWaitingList(name);
+              }
+            });
         }
         //This user is new!
         else {
@@ -79,15 +91,14 @@ var APP = (function (app) {
               me = ({
                 name: name, win: 0, lose: 0, gamePlayed: 0
               });
+              //start watching user
+              watchMe(name);
 
               //add user to waiting list
               addToWaitingList(name);
             });
         }
       });
-
-    //start watching user
-    watchMe(name);
   };
 
   //add user to waiting list
@@ -99,6 +110,10 @@ var APP = (function (app) {
         //view update: hide form
         view.hideNameForm();
       });
+  };
+  //remove user from waiting list
+  const removeFromWaitingList = name => {
+    waitingListRef.child(name).remove();
   };
 
   //This function is for watching user object change on FireBase
@@ -140,14 +155,18 @@ var APP = (function (app) {
     //detach value change listener for every events and cancel queued onDisconnect
     gamesRef.child(gameId).off();
     gamesRef.child(gameId).onDisconnect().cancel();
+    chatRoomsRef.child(gameId).off();
+    chatRoomsRef.child(gameId).onDisconnect().cancel();
+
     //set user's current game as null
     usersRef.child(me.name).update({currentGame: null});
 
     //add user to waiting list again.
     addToWaitingList(me.name);
 
-    //destroy game
+    //destroy game and chat room
     gamesRef.child(gameId).remove();
+    chatRoomsRef.child(gameId).remove();
 
   };
 
@@ -155,7 +174,7 @@ var APP = (function (app) {
    [gameId]: {
     challenger: { name: 'monad', choice: 'ROCK' }',
     challengee: { name: 'kami', choice: 'PAPER' },
-    status: 'challenge', 'game', 'opponent left', 'disconnected'
+    status: 'challenge'  or 'game', 'disconnected', 'quit'
     accepted: "accepted", "denied", "waiting"
    }
    */
@@ -167,7 +186,7 @@ var APP = (function (app) {
       const currentGame = gameSnap.val();
       //game destroyed
       if(!currentGame) {
-        console.log('GAME WAS DESTROYED, BUT THIS LINE IS NEVER REACHED. CHECKING off() function works.');
+        console.log('GAME WAS DESTROYED, BUT THIS LINE IS NEVER REACHED. IMPLEMENTED THIS JUST FOR CHECKING FIREBASE off() function works.');
       }
       // game is alive
       else {
@@ -177,6 +196,7 @@ var APP = (function (app) {
             destroyGame(gameId);
             console.log('OPPONENT IS DISCONNECTED WHILE CHALLENGING');
             //view update
+            view.showMessage('Opponent is disconnected while challenging', 'alert-danger');
             view.hideWaitingChallengeesMsg();
             view.hideChallengedByMsg();
 
@@ -186,6 +206,7 @@ var APP = (function (app) {
             destroyGame(gameId);
             console.log('OPPONENT IS DISCONNECTED WHILE PLAYING RPS');
             //view update: hide rps game ui
+            view.showMessage('Opponent is disconnected while playing rps', 'alert-danger');
             view.hideRpsGameUI();
             view.updateGameMsg("");
             view.removeFromGameListView(gameId);
@@ -197,20 +218,40 @@ var APP = (function (app) {
             destroyGame(gameId);
             console.log('ONE PLAYER DENIED CHALLENGE!');
             //view update
+            view.showMessage('Challenge denied!', 'alert-warning');
             view.hideWaitingChallengeesMsg();
             view.hideChallengedByMsg();
           }
         }
+        //case 4. one user quit game
+        else if(currentGame.status === 'quit') {
+          destroyGame(gameId);
+          //view update: hide game ui
+          view.showMessage('Opponent has quit the game', 'alert-warning');
+          view.hideRpsGameUI();
+          view.updateGameMsg("");
+          view.removeFromGameListView(gameId);
+        }
         // Game in progress: currentGame.status === 'game'
         else {
-          //case 4. one user accept challenge and game start
+          //case 5. one user accept challenge and game start
           if(currentGame.accepted === 'accepted') { //game start
+            //remove user from waiting list of FireBase
+            removeFromWaitingList(me.name);
+
+            //watch chat messages
+            chat.watchChatMessage(gameId, me.name);
+
             //view update
+            view.showMessage('Challenge accepted! Game started!', 'alert-info');
+            console.log('CHALLENGE ACCEPTED! GAME STARTED!');
             view.hideChallengedByMsg();
             view.hideWaitingChallengeesMsg();
             view.showRpsGameUI();
+
           }
-          //case 5. user pick one of rock..scissor.
+
+          //case 6. user pick one of rock..scissor.
           else {
             let players = [];
             if(currentGame.challenger.name === me.name) { // me === challenger
@@ -284,7 +325,7 @@ var APP = (function (app) {
   };
 
   /**
-   * CHALLENGER calls following function
+   * CHALLENGER calls challenge function
    */
   game.challenge = challengeeName => {
     //If you click yourself, do nothing;
@@ -315,6 +356,11 @@ var APP = (function (app) {
   game.acceptChallenge = () => {
     const gameId = me.currentGame.id;
     gamesRef.child(gameId).update({status: 'game', accepted: 'accepted'});
+
+    //create chat room for this game
+    chatRoomsRef.child(gameId).set({});
+    chatRoomsRef.child(gameId).onDisconnect().remove();
+
   };
 
   game.denyChallenge = () => {
@@ -322,27 +368,32 @@ var APP = (function (app) {
     gamesRef.child(gameId).update({status: 'challenge', accepted: 'denied'});
   };
 
-
-  /**
-   * Function for Both Challenger and Challengee
-   */
+  //user chose one of ROCK, PAPER, SCISSOR.
   game.chooseOneOfRPS = rps => {
-    // //update user choice
+    //update user choice
     let update = { };
     update[me.currentGame.role + '/choice'] = rps;
     update.accepted = null;
     database.ref('games/' + me.currentGame.id).update(update);
 
-    //WHICH ONE IS PROPER WAY?
-    // //update user choice using transaction.
-    // database.ref('games/' + me.currentGame).transaction(currentVal => {
-    //   const role = currentVal[me.name].role;
-    //   update[me.name] = { choice: rps, role: role };
-    //   return Object.assign(currentVal, update)
-    // });
-
     //view update: show user's choice
     view.showUserChoice(rps);
+  };
+
+  //user quit the game
+  game.quitGame = () => {
+    const gameId = me.currentGame.id;
+    gamesRef.child(gameId).update({status: 'quit'});
+  };
+
+  game.submitMsg = msg => {
+    console.log(msg);
+    const newMsgRef = chatRoomsRef.child(me.currentGame.id).push();
+    newMsgRef.set({
+      name: me.name,
+      message: msg,
+      timestamp: + Date.now()
+    })
   };
 
   //initialize game.

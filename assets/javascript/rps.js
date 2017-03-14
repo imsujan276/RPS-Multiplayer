@@ -3,8 +3,6 @@
  */
 var APP = (function (app) {
 
-
-
   app.rps = (player1, player2) => {
     const choice1 = player1.choice;
     const choice2 = player2.choice;

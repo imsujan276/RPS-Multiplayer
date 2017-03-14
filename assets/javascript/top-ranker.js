@@ -17,17 +17,7 @@ var APP = (function (app) {
       view.updateRanking(rankers);
 
     });
-
-
-
   };
-
-
-
-
-
-
-
 
   return app;
 

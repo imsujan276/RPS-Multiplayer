@@ -19,138 +19,147 @@
   <script src="assets/javascript/rps.js"></script>
   <script src="assets/javascript/view.js"></script>
   <script src="assets/javascript/top-ranker.js"></script>
+  <script src="assets/javascript/chat.js"></script>
   <script src="assets/javascript/game.js"></script>
   <script src="assets/javascript/event-listen.js"></script>
 </head>
 
 <body>
-  <div class="page-header">
-    <h1 class="text-center text-primary">Rock Paper Scissors</h1>
-  </div>
-  <div class="container">
-    <div class="row">
-      <div>
-        <form id="name-form" class="form-inline text-center">
-          <div class="form-group">
-            <label class="sr-only" for="name-input">Name</label>
-            <input type="text" class="form-control" id="name-input" placeholder="Name" autofocus>
-          </div>
-          <button id="start-game" type="submit" class="btn btn-primary">Start</button>
-        </form>
-      </div>
+<div class="page-header">
+  <h1 class="text-center text-primary">Rock Paper Scissors</h1>
+</div>
+<div class="container">
+  <div class="row">
+    <div class="col-sm-12 col-xs-12">
+      <div id="message-box"></div>
     </div>
-    <br>
-    <div class="row">
-      <div class="col-sm-12">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title">Game Stats</h3>
-          </div>
-          <div class="panel-body text-center">
-            PLAYER: <span id="name" class="text-warning">?</span>
-            WIN: <span id="win" class="label label-primary">0</span>
-            LOSE: <span id="lose" class="label label-danger">0</span>
-            GAME PLAYED: <span id="game-played" class="label label-success">0</span>
-          </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-12 col-sm-12">
+      <form id="name-form" class="form-inline text-center">
+        <div class="form-group">
+          <label class="sr-only" for="name-input">Name</label>
+          <input type="text" class="form-control" id="name-input" placeholder="Name" autofocus>
+        </div>
+        <button id="start-game" type="submit" class="btn btn-primary">Start</button>
+      </form>
+    </div>
+  </div>
+  <br>
+  <div class="row">
+    <div class="col-sm-12">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Game Stats</h3>
+        </div>
+        <div class="panel-body text-center">
+          PLAYER: <span id="name" class="text-warning">?</span>
+          WIN: <span id="win" class="label label-primary">0</span>
+          LOSE: <span id="lose" class="label label-danger">0</span>
+          GAME PLAYED: <span id="game-played" class="label label-success">0</span>
         </div>
       </div>
     </div>
-    <div class="row">
-      <div class="col-sm-12">
-        <div id="game-box" class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title">My Game</h3>
-          </div>
-          <div class="panel-body">
-            <div class="col-sm-4">
+  </div>
+  <div class="row">
+    <div class="col-sm-12">
+      <div id="game-box" class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">My Game</h3>
+        </div>
+        <div class="panel-body">
+          <div class="row">
+            <div class="col-sm-4 col-xs-4">
               <div id="my-rps-choices" class="vcenter">
-                <button class="rps btn btn-block btn-info">ROCK</button>
-                <button class="rps btn btn-block btn-info">PAPER</button>
-                <button class="rps btn btn-block btn-info">SCISSOR</button>
+                <button class="rps btn btn-lg btn-block btn-info">ROCK</button>
+                <button class="rps btn btn-lg btn-block btn-info">PAPER</button>
+                <button class="rps btn btn-lg btn-block btn-info">SCISSOR</button>
+                <button id="quit" class="btn btn-lg btn-block btn-danger">QUIT GAME</button>
               </div>
               <div id="my-choice" class="thumbnail"></div>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-4 col-xs-4">
               <h2 id="result-message" class="text-center"></h2>
               <h2 id="waiting-opponent-choice" class="text-center"></h2>
               <h2 id="timer" class="text-center"></h2>
             </div>
-            <div class="col-sm-4">
+            <div class="col-sm-4 col-xs-4">
               <div class="thumbnail">
                 <img id="opponent-choice" src="assets/images/qmark.png">
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
-    <div id="chat-box" class="row">
-      <div class="col-sm-offset-2 col-sm-8">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title">Chat</h3>
-          </div>
-          <div id="chat-messages" class="panel-body">
-            <p>chat message</p>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-4">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title">Current Games</h3>
-          </div>
-          <div class="panel-body">
-            <ul id="current-games" class="list-group"></ul>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title">Waiting players</h3>
-          </div>
-          <div class="panel-body">
-            <div id="waiting-players" class="list-group"></div>
-          </div>
-        </div>
-      </div>
-      <div class="col-sm-4">
-        <div class="panel panel-primary">
-          <div class="panel-heading">
-            <h3 class="panel-title">Most wins</h3>
-          </div>
-          <div class="panel-body">
-            <ul id="top-rankers" class="list-group"></ul>
+          <br>
+          <div class="row">
+            <div id="chat-box" class="col-sm-12 col-xs-12">
+              <div id="chat-messages" class="well"></div>
+              <form id="chat-form">
+                <div class="form-group">
+                  <label class="sr-only" for="chat-message">chat message</label>
+                  <input type="text" class="form-control" id="chat-message" placeholder="Type here.">
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
-    <div id="message-box"></div>
-    <div id="challenge-msg-box">
-      <div class="panel">
-        <div class="panel-body text-center">
-          <h4>You are Challenged! <br>Are you going to play RPS with <span id="challenger"></span>? </h4><br>
-          <div>
-            <button id="accept-challenge-btn" class="btn btn-primary">Yes</button>
-          <button id="deny-challenge-btn" class="btn btn-danger">No</button>
-          </div>
+  <div class="row">
+    <div class="col-sm-4 col-xs-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Current Games</h3>
+        </div>
+        <div class="panel-body">
+          <ul id="current-games" class="list-group"></ul>
         </div>
       </div>
     </div>
-  <div id="waiting-msg-box">
-    <div class="panel">
-      <div class="panel-body text-center">
-        <h4>Waiting <span id="opponent"></span>'s response...</h4><br>
-        <div>
+    <div class="col-sm-4 col-xs-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Waiting players</h3>
+        </div>
+        <div class="panel-body">
+          <div id="waiting-players"></div>
+          <p>click a player you want to challenge!</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-4 col-xs-4">
+      <div class="panel panel-primary">
+        <div class="panel-heading">
+          <h3 class="panel-title">Most wins</h3>
+        </div>
+        <div class="panel-body">
+          <ul id="top-rankers" class="list-group"></ul>
         </div>
       </div>
     </div>
   </div>
-    
+</div>
+<div id="challenge-msg-box">
+  <div class="panel">
+    <div class="panel-body text-center">
+      <h4>You are Challenged! <br>Are you going to play RPS with <span id="challenger"></span>? </h4><br>
+      <div>
+        <button id="accept-challenge-btn" class="btn btn-primary">Yes</button>
+        <button id="deny-challenge-btn" class="btn btn-danger">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="waiting-msg-box">
+  <div class="panel">
+    <div class="panel-body text-center">
+      <h4>Waiting <span id="opponent"></span>'s response...</h4><br>
+      <div>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 </body>
 

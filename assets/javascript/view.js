@@ -20,7 +20,7 @@ var APP = (function (app) {
       const message = $('<div>').addClass(cssClass + ' alert').text(msg);
       messageBox
         .append(message);
-      setTimeout(() => message.remove(), 5000);
+      setTimeout(() => message.remove(), 3000);
     };
 
 
@@ -35,10 +35,10 @@ var APP = (function (app) {
 
     //add player to waiting list
     view.appendToWaitingList = (name, isThatYou) => {
-      // const classToAdd = isThatYou ?
-      //   'btn btn-default disabled waiting-player' : 'btn btn-success waiting-player';
       const classToAdd = isThatYou ?
-        'list-group-item disabled waiting-player' : 'list-group-item list-group-item-success waiting-player';
+        'btn btn-default btn-block disabled waiting-player' : 'btn btn-success btn-block waiting-player';
+      // const classToAdd = isThatYou ?
+      //   'list-group-item disabled waiting-player' : 'list-group-item list-group-item-success waiting-player';
       waitingList.append($('<button>').addClass(classToAdd).text(name));
     };
     //delete player from waiting list
@@ -82,7 +82,7 @@ var APP = (function (app) {
     };
 
     view.showRpsGameUI = () => {
-      view.updateGameMsg("Choose one of choices!");
+      view.updateGameMsg('Choose one of choices!');
       gameBox.show('slow');
     };
     view.hideRpsGameUI = () => gameBox.hide('slow');
@@ -104,10 +104,10 @@ var APP = (function (app) {
     view.updateGameMsg = msg => $('#waiting-opponent-choice').text(msg);
 
     view.showResultMessage = result => {
-      if(result === 'draw') $('#result-message').text("Draw!");
-      else $('#result-message').text("You " + result + "!");
+      if(result === 'draw') $('#result-message').text('Draw!');
+      else $('#result-message').text('You ' + result + '!');
     };
-    view.hideResultMessage = () => $('#result-message').text("");
+    view.hideResultMessage = () => $('#result-message').text('');
 
     view.updateRanking = rankers => {
       $('#top-rankers li').remove();
@@ -115,16 +115,29 @@ var APP = (function (app) {
       rankers.forEach((ranker, idx) => {
         const rank = idx + 1;
         topRankers.append(
-          $('<li>').addClass('list-group-item').text(rank + ". " + ranker.name + ": " + (-ranker.win))
+          $('<li>').addClass('list-group-item').text(rank + '. ' + ranker.name + ': ' + (-ranker.win))
         )
       });
 
     };
 
+    //3 seconds timer for next game
     view.showTimeFrom = x => {
       $('#timer').text(x);
     };
 
+    view.appendChatMsg = (msg, myName) => {
+      const color = myName === msg.name ? 'text-primary' : 'text-warning';
+      const chatMsgs = $('#chat-messages');
+      chatMsgs
+        .append(
+          $('<p>').addClass('italic pull-right').text(new Date(msg.timestamp).toTimeString().split(' ')[0])
+        )
+        .append(
+          $('<p>').addClass(color).text(msg.name + ': ' + msg.message)
+        );
+      chatMsgs.animate({ scrollTop: chatMsgs.prop("scrollHeight")}, 500);
+    };
   });
 
 

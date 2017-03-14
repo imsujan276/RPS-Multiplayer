@@ -1,16 +1,15 @@
-#chat-box,
 #game-box {
 	display: none;
 }
 .waiting-player {
 	margin: 5px;
 }
-#message-box {
-	position: fixed;
-	right: 20px;
-	top: 20px;
-	font-weight: bold;
-}
+/*#message-box {*/
+	/*position: fixed;*/
+	/*right: 20px;*/
+	/*top: 20px;*/
+	/*font-weight: bold;*/
+/*}*/
 #challenge-msg-box,
 #waiting-msg-box {
 	display: none;
@@ -43,3 +42,12 @@
 	/*float: none;*/
 	/**/
 /*}*/
+.italic {
+	font-style: italic;
+}
+#chat-messages {
+	padding: 10px 15px 0 15px;
+	margin-bottom: 10px;
+	height: 142px;
+	overflow: scroll;
+}
