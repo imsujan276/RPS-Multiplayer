@@ -51,36 +51,36 @@ var APP = (function (app) {
 
     Promise.all([usersRef.child(name).once('value'), waitingListRef.child(name).once('value')])
       .then(([userSnap, waitingSnap]) => {
-      if(userSnap.exists()) { //existing user, don't need password.
-        if(waitingSnap.exists()) {
-          view.showMessage('You are already online, check another tab of your browser.', 'alert-danger');
-        } else {
-          view.showMessage('Welcome back ' + name + '. Enjoy!', 'alert-success');
-          //save my info
-          state.setMe(userSnapshot.val());
-          //start watching user
-          user.watchMe(name);
-          //add user to waiting list
-          waitList.addToWaitingList(name);
-        }
-      } else { //This user is new!
-        //save user name in Firebase
-        usersRef.child(name).set({
-          name: name, win: 0, lose: 0, gamePlayed: 0
-        })
-          .then(() => {
-            // save my info: name, lose, win, gameplayed
-            state.setMe({
-              name: name, win: 0, lose: 0, gamePlayed: 0
-            });
+        if(userSnap.exists()) { //existing user, don't need password.
+          if(waitingSnap.exists()) {
+            view.showMessage('You are already online, check another tab of your browser.', 'alert-danger');
+          } else {
+            view.showMessage('Welcome back ' + name + '. Enjoy!', 'alert-success');
+            //save my info
+            state.setMe(userSnap.val());
             //start watching user
             user.watchMe(name);
-
             //add user to waiting list
             waitList.addToWaitingList(name);
-          });
-      }
-    });
+          }
+        } else { //This user is new!
+          //save user name in Firebase
+          usersRef.child(name).set({
+            name: name, win: 0, lose: 0, gamePlayed: 0
+          })
+            .then(() => {
+              // save my info: name, lose, win, gameplayed
+              state.setMe({
+                name: name, win: 0, lose: 0, gamePlayed: 0
+              });
+              //start watching user
+              user.watchMe(name);
+
+              //add user to waiting list
+              waitList.addToWaitingList(name);
+            });
+        }
+      });
   };
 
 

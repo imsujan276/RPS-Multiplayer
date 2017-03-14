@@ -6,14 +6,11 @@ var APP = (function (app) {
 
   $(() => {
     const nameForm = $('#name-form');
-    // const startGameBtn = $('#start-game');
-    // const nameInput = $('#name-input');
     const waitingList = $('#waiting-players');
-    // const acceptBtn = $('#accept-challenge-btn');
-    // const denyBtn = $('#deny-challenge-btn');
     const messageBox = $('#message-box');
     const gameBox = $('#game-box');
     const topRankers = $('#top-rankers');
+    const chatMsgs = $('#chat-messages');
 
     //render messages to user and delete(hide) in 5 secs
     view.showMessage = (msg, cssClass) => {
@@ -129,7 +126,7 @@ var APP = (function (app) {
     //if message is from user, set text color as primary, otherwise warning color.
     view.appendChatMsg = (msg, myName) => {
       const color = myName === msg.name ? 'text-primary' : 'text-warning';
-      const chatMsgs = $('#chat-messages');
+
       chatMsgs
         .append(
           $('<p>').addClass('italic pull-right').text(new Date(msg.timestamp).toTimeString().split(' ')[0])
@@ -139,6 +136,11 @@ var APP = (function (app) {
         );
       chatMsgs.animate({ scrollTop: chatMsgs.prop("scrollHeight")}, 500);
     };
+
+    view.clearChatRoom = () => {
+      chatMsgs.remove('p');
+    };
+
   });
 
 

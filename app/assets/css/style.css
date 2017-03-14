@@ -9,9 +9,9 @@
 #waiting-msg-box {
 	display: none;
 	position: fixed;
-	transform: translate(-50%, -50%);
+	transform: translate(-50%, -30%);
 	left: 50%;
-	top: 50%;
+	top: 30%;
 }
 #challenge-msg-box .panel,
 #waiting-msg-box .panel {

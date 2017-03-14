@@ -37,6 +37,8 @@ var APP = (function (app) {
     gamesRef.child(gameId).remove();
     chatRoomsRef.child(gameId).remove();
 
+    //view update: chat messages removing
+    view.clearChatRoom();
   };
 
 
@@ -131,6 +133,12 @@ var APP = (function (app) {
               view.hideChallengedByMsg();
               view.hideWaitingChallengeesMsg();
               view.showRpsGameUI();
+              chatRoomsRef.child(gameId).push()
+                .set({
+                  name: 'admin',
+                  message: me.name + ' joined the game.',
+                  timestamp: +Date.now()
+                })
 
             }
 
