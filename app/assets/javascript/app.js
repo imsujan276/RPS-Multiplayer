@@ -165,11 +165,9 @@ var APP = (function (app) {
     })
   };
 
-  //initialize app
-  initialize();
-
   //Overwrite existing app object and Expose API
   return {
+    initialize,
     setUsername,
     challenge,
     acceptChallenge,

@@ -22,6 +22,7 @@ var APP = (function (app) {
     const me = state.getMe();
 
     //detach value change listener for every events and cancel queued onDisconnect
+    //detach value change listener for every events and cancel queued onDisconnect
     gamesRef.child(gameId).off();
     gamesRef.child(gameId).onDisconnect().cancel();
     chatRoomsRef.child(gameId).off();

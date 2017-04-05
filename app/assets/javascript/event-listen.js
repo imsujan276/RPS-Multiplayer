@@ -4,6 +4,9 @@
 var APP = (function (app) {
 
   $(() => {
+
+    app.initialize();
+
     //Event listen for start button click or enter key being pressed
     $('#name-form').on('submit', (e) => {
       e.preventDefault();
@@ -43,8 +46,5 @@ var APP = (function (app) {
       return false;
     });
   });
-
-
-
 
 })(APP);
